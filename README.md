@@ -32,3 +32,17 @@ clean
 sudo iptables -F
 start blocking
 sudo iptables -I INPUT -p tcp --dport 80 -m string --algo bm --string "UNION" -j NFQUEUE --queue-num 0 --queue-bypass
+
+Potential if long slumber:
+
+ # 1. Flush out any old stuck rules
+sudo iptables -F
+sudo ip6tables -F
+
+# 2. Insert detour rules with the bypass safety flag
+sudo iptables -I INPUT -p tcp --dport 80 -j NFQUEUE --queue-num 0 --queue-bypass
+sudo iptables -I OUTPUT -p tcp --sport 80 -j NFQUEUE --queue-num 0 --queue-bypass
+
+#3. sudo suricata -c /etc/suricata/suricata.yaml -q 0 -v
+
+
